@@ -20,16 +20,19 @@ font = pygame.font.SysFont('monospace', 48)
 label_win = font.render("You Win", 1, (255, 0, 0))
 label_lose = font.render("You Lose", 1, (255, 0, 0))
 
-with open('res/maps/map.txt') as map_file:
-    while True:
-        line = map_file.readline()
-        if line == '\n':
-            break
-        game_map.map_data.append(list(line))
-    player_x, player_y = map_file.readline().split(',')
-    player_character.x, player_character.y = int(player_x), int(player_y)
-    monster_x, monster_y = map_file.readline().split(',')
-    monster.x, monster.y = int(monster_x), int(monster_y)
+
+def init_level():
+    global map_file, line, player_x, player_y, monster_x, monster_y
+    with open('res/maps/map.txt') as map_file:
+        while True:
+            line = map_file.readline()
+            if line == '\n':
+                break
+            game_map.map_data.append(list(line))
+        player_x, player_y = map_file.readline().split(',')
+        player_character.x, player_character.y = int(player_x), int(player_y)
+        monster_x, monster_y = map_file.readline().split(',')
+        monster.x, monster.y = int(monster_x), int(monster_y)
 
 
 def process_events():
@@ -99,12 +102,7 @@ def check_status():
         game_state = 'lose'
 
 
-while True:
-    screen.fill((0, 0, 0))
-    process_events()
-    if game_state == 'running':
-        move_monster()
-        check_status()
+def draw():
     game_map.draw(screen)
     if game_state == 'win':
         screen.blit(label_win, (0, 0))
@@ -113,3 +111,14 @@ while True:
     player_character.draw(screen)
     monster.draw(screen)
     pygame.display.flip()
+
+
+init_level()
+
+while True:
+    screen.fill((0, 0, 0))
+    process_events()
+    if game_state == 'running':
+        move_monster()
+        check_status()
+    draw()
