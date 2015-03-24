@@ -6,9 +6,7 @@ __author__ = 'TriD'
 class GameMap(object):
     def __init__(self):
         self.map_data = []
-        with open('res/maps/map.txt') as map_file:
-            for line in map_file:
-                self.map_data.append(list(line))
+
         self.wall_sprite = pygame.image.load('res/images/wall.png')
         self.floor_sprite = pygame.image.load('res/images/floor.png')
         self.chest_sprite = pygame.image.load('res/images/chest.png')
