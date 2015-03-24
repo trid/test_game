@@ -19,11 +19,13 @@ monster_update = 0
 font = pygame.font.SysFont('monospace', 48)
 label_win = font.render("You Win", 1, (255, 0, 0))
 label_lose = font.render("You Lose", 1, (255, 0, 0))
+next_level = None
 
 
-def init_level():
-    global map_file, line, player_x, player_y, monster_x, monster_y
-    with open('res/maps/map.txt') as map_file:
+def init_level(level_name):
+    global map_file, next_level, game_map
+    game_map.map_data = []
+    with open('res/maps/' + level_name) as map_file:
         while True:
             line = map_file.readline()
             if line == '\n':
@@ -33,6 +35,8 @@ def init_level():
         player_character.x, player_character.y = int(player_x), int(player_y)
         monster_x, monster_y = map_file.readline().split(',')
         monster.x, monster.y = int(monster_x), int(monster_y)
+        map_file.readline()
+        next_level = map_file.readline()
 
 
 def process_events():
@@ -97,7 +101,10 @@ def move_monster():
 def check_status():
     global game_state
     if game_map.map_data[player_character.y][player_character.x] == '3':
-        game_state = 'win'
+        if next_level:
+            init_level(next_level)
+        else:
+            game_state = 'win'
     if player_character.x == monster.x and player_character.y == monster.y:
         game_state = 'lose'
 
@@ -113,7 +120,7 @@ def draw():
     pygame.display.flip()
 
 
-init_level()
+init_level('map.txt')
 
 while True:
     screen.fill((0, 0, 0))
