@@ -4,21 +4,18 @@ import sys
 from game.game_map import GameMap
 from game.monster import Monster
 from game.player_character import PlayerCharacter
+from game.video import Video
 
 __author__ = 'TriD'
 
-pygame.init()
-screen = pygame.display.set_mode((800, 600))
 
+video = Video()
 game_map = GameMap()
 player_character = PlayerCharacter()
 monster = Monster()
 game_state = 'running'
 last_tick = pygame.time.get_ticks()
 monster_update = 0
-font = pygame.font.SysFont('monospace', 48)
-label_win = font.render("You Win", 1, (255, 0, 0))
-label_lose = font.render("You Lose", 1, (255, 0, 0))
 next_level = None
 
 
@@ -109,23 +106,16 @@ def check_status():
         game_state = 'lose'
 
 
-def draw():
-    game_map.draw(screen)
-    if game_state == 'win':
-        screen.blit(label_win, (0, 0))
-    if game_state == 'lose':
-        screen.blit(label_lose, (0, 0))
-    player_character.draw(screen)
-    monster.draw(screen)
-    pygame.display.flip()
-
+video.drawing_objects.append(game_map)
+video.drawing_objects.append(player_character)
+video.drawing_objects.append(monster)
 
 init_level('map.txt')
 
 while True:
-    screen.fill((0, 0, 0))
     process_events()
     if game_state == 'running':
         move_monster()
         check_status()
-    draw()
+    video.game_state = game_state
+    video.draw()
