@@ -5,6 +5,7 @@ from game.game_map import GameMap
 from game.monster import Monster
 from game.player_character import PlayerCharacter
 from game.video import Video
+from game.world import World
 
 __author__ = 'TriD'
 
@@ -13,6 +14,7 @@ video = Video()
 game_map = GameMap()
 player_character = PlayerCharacter()
 monster = Monster()
+world = World(game_map)
 game_state = 'running'
 last_tick = pygame.time.get_ticks()
 monster_update = 0
@@ -57,10 +59,10 @@ def process_events():
 
 def monster_can_move():
     can_move = False
-    can_move = can_move or (game_map.map_data[monster.y][monster.x - 1] != '1')
-    can_move = can_move or (game_map.map_data[monster.y][monster.x + 1] != '1')
-    can_move = can_move or (game_map.map_data[monster.y - 1][monster.x] != '1')
-    can_move = can_move or (game_map.map_data[monster.y + 1][monster.x] != '1')
+    can_move = can_move or world.can_move(monster, monster.x, monster.y - 1)
+    can_move = can_move or world.can_move(monster, monster.x, monster.y + 1)
+    can_move = can_move or world.can_move(monster, monster.x - 1, monster.y)
+    can_move = can_move or world.can_move(monster, monster.x + 1, monster.y)
     return can_move
 
 
@@ -80,19 +82,15 @@ def move_monster():
     if not monster_can_move():
         return
     while not moved:
-        i = randint(0, 4)
-        if i == 0 and game_map.map_data[monster.y][monster.x - 1] != '1':
-            monster.x -= 1
-            moved = True
-        elif i == 1 and game_map.map_data[monster.y][monster.x + 1] != '1':
-            monster.x += 1
-            moved = True
-        elif i == 2 and game_map.map_data[monster.y - 1][monster.x] != '1':
-            monster.y -= 1
-            moved = True
-        elif i == 3 and game_map.map_data[monster.y + 1][monster.x] != '1':
-            monster.y += 1
-            moved = True
+        i = randint(0, 3)
+        if i == 0:
+            moved = world.move(monster, monster.x - 1, monster.y)
+        elif i == 1:
+            moved = world.move(monster, monster.x + 1, monster.y)
+        elif i == 2:
+            moved = world.move(monster, monster.x, monster.y - 1)
+        elif i == 3:
+            moved = world.move(monster, monster.x, monster.y + 1)
 
 
 def check_status():

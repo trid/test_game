@@ -20,3 +20,6 @@ class GameMap(object):
                     screen.blit(self.floor_sprite, (k * 32, i * 32))
                 elif self.map_data[i][k] == '3':
                     screen.blit(self.chest_sprite, (k * 32, i * 32))
+
+    def get_tile(self, x, y):
+        return self.map_data[y][x]
