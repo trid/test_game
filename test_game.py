@@ -20,6 +20,9 @@ last_tick = pygame.time.get_ticks()
 monster_update = 0
 next_level = None
 
+monster_attack = None
+character_attack = None
+
 
 def init_level(level_name):
     global map_file, next_level, game_map

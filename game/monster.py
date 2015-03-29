@@ -7,6 +7,8 @@ class Monster(object):
     def __init__(self):
         self.x = 7
         self.y = 4
+        self.attack = 5
+        self.hp = 15
         self.image = pygame.image.load('res/images/monster.png')
 
     def draw(self, screen):

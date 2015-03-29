@@ -7,6 +7,8 @@ class PlayerCharacter(object):
     def __init__(self):
         self.x = 1
         self.y = 1
+        self.attack = 10
+        self.hp = 15
         self.image = pygame.image.load('res/images/character.png')
 
     def draw(self, screen):
